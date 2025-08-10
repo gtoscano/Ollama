@@ -1,0 +1,22 @@
+# docker compose exec -it ollama bash 
+# ollama run deepseek-r1:8b --verbose
+
+services:
+  ollama:
+    image: ollama/ollama:latest
+    container_name: ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ./ollama:/root/.ollama
+    environment:
+      - NVIDIA_VISIBLE_DEVICES=all        # expose every GPU
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia             # ← set the driver explicitly
+              count: 1                   # or "all"
+              capabilities: [gpu]
+    restart: unless-stopped
+
